@@ -22,14 +22,20 @@ class PotterShoppingCart
     {
         $uniqueBooks = $this->books->unique('id');
 
-        if ($uniqueBooks->count() > 3) {
-            return (int) round($uniqueBooks->sum('price') * 0.8);
-        } elseif ($uniqueBooks->count() > 2) {
-            return (int) round($uniqueBooks->sum('price') * 0.9);
-        } elseif ($uniqueBooks->count() > 1) {
-            return (int) round($uniqueBooks->sum('price') * 0.95);
-        }
+        $discountRate = $this->getDiscountRate( $uniqueBooks->count() );
 
-        return 100;
+        return (int) round($uniqueBooks->sum('price') * $discountRate);
+    }
+
+    private function getDiscountRate( $count )
+    {
+        $discountRate = [
+            1 => 1,
+            2 => 0.95,
+            3 => 0.9,
+            4 => 0.8
+        ];
+
+        return $discountRate[$count];
     }
 }
