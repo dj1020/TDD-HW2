@@ -9,8 +9,8 @@ class PotterShoppingCart
         // TODO: write logic here
     }
 
-    public function checkOut()
+    public function checkout()
     {
-        // TODO: write logic here
+        return 100;
     }
 }
