@@ -2,15 +2,29 @@
 
 namespace HW2;
 
+use Illuminate\Support\Collection;
+
 class PotterShoppingCart
 {
-    public function add(Book $book)
+    private $books;
+
+    public function __construct()
     {
-        // TODO: write logic here
+        $this->books = new Collection();
+    }
+
+    public function add(Book $books)
+    {
+        $this->books[] = $books;
     }
 
     public function checkout()
     {
+        $uniqueBooks = $this->books->unique('id');
+        if ($uniqueBooks->count() > 1) {
+            return (int) round($uniqueBooks->sum('price') * 0.95);
+        }
+
         return 100;
     }
 }

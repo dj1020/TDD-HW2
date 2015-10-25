@@ -9,5 +9,8 @@
         "psr-4": {
             "HW2\\": "src/"
         }
+    },
+    "require": {
+        "Illuminate/Support": "^5.1"
     }
 }
