@@ -22,7 +22,9 @@ class PotterShoppingCart
     {
         $uniqueBooks = $this->books->unique('id');
 
-        if ($uniqueBooks->count() > 2) {
+        if ($uniqueBooks->count() > 3) {
+            return (int) round($uniqueBooks->sum('price') * 0.8);
+        } elseif ($uniqueBooks->count() > 2) {
             return (int) round($uniqueBooks->sum('price') * 0.9);
         } elseif ($uniqueBooks->count() > 1) {
             return (int) round($uniqueBooks->sum('price') * 0.95);
