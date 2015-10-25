@@ -87,6 +87,15 @@ class PotterShoppingCartSpec extends ObjectBehavior
     //     And 第五集買了 0 本
     //     When 結帳
     //     Then 價格應為 320 元
+    public function it_should_return_320_when_buy_one_for_each_book_one_two_three_four()
+    {
+        $this->add(new Book(['id' => 1, 'price' => 100]));
+        $this->add(new Book(['id' => 2, 'price' => 100]));
+        $this->add(new Book(['id' => 3, 'price' => 100]));
+        $this->add(new Book(['id' => 4, 'price' => 100]));
+
+        $this->checkout()->shouldReturn(320);
+    }
 
     // Scenario: 一次買了整套，一二三四五集各買了一本，價格應為100*5*0.75=375
     //     Given 第一集買了 1 本
@@ -96,6 +105,7 @@ class PotterShoppingCartSpec extends ObjectBehavior
     //     And 第五集買了 1 本
     //     When 結帳
     //     Then 價格應為 375 元
+    //
 
     // Scenario: 一二集各買了一本，第三集買了兩本，價格應為100*3*0.9 + 100 = 370
     //     Given 第一集買了 1 本
