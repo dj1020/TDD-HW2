@@ -1,0 +1,4 @@
+suites:
+    hw2_suite:
+        namespace: HW2
+        psr4_prefix: HW2
