@@ -4,6 +4,7 @@ namespace spec\HW2;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use \HW2\Book;
 
 class PotterShoppingCartSpec extends ObjectBehavior
 {
@@ -38,6 +39,12 @@ class PotterShoppingCartSpec extends ObjectBehavior
     //     And 第五集買了 0 本
     //     When 結帳
     //     Then 價格應為 100 元
+    public function it_should_return_100_when_buy_1_book_one()
+    {
+        $this->add(new Book(['id' => 1, 'price' => 100]));
+
+        $this->checkout()->shouldReturn(100);
+    }
 
     // Scenario: 第一集買了一本，第二集也買了一本，價格應為100*2*0.95=190
     //     Given 第一集買了 1 本
