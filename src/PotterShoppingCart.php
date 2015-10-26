@@ -17,12 +17,18 @@ class PotterShoppingCart
     }
 
     public function checkout() {
-        list($discount, $restBooks) = $this->getDiscount( $this->books );
+        $restBooks = $this->books;
+        $total = 0;
 
-        return $discount + $restBooks->sum( 'price' );
+        while ( $restBooks->count() > 0 ) {
+            list($discount, $restBooks) = $this->getDiscount( $restBooks );
+            $total += $discount;
+        }
+
+        return $total;
     }
 
-    private function getDiscount( $books ) {
+    private function getDiscount( Collection $books ) {
         $discountBooks = new Collection();
         $restBooks = new Collection();
 
@@ -59,7 +65,7 @@ class PotterShoppingCart
      * @param $discountBooks
      * @return bool
      */
-    private function isUniqueBook( $book, $discountBooks ) {
+    private function isUniqueBook( $book, Collection $discountBooks ) {
         return ! $discountBooks->pluck( 'id' )->contains( $book->id );
     }
 }
