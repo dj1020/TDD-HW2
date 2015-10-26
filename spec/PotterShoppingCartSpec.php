@@ -143,4 +143,15 @@ class PotterShoppingCartSpec extends ObjectBehavior
     //     When 結帳
     //     Then 價格應為 460 元
 
+    public function it_should_return_460_when_buy_1_book_one_and_2_book_two_and_2_book_three()
+    {
+        $this->add(new Book(['id' => 1, 'price' => 100]));
+        $this->add(new Book(['id' => 2, 'price' => 100]));
+        $this->add(new Book(['id' => 2, 'price' => 100]));
+        $this->add(new Book(['id' => 3, 'price' => 100]));
+        $this->add(new Book(['id' => 3, 'price' => 100]));
+
+        $this->checkout()->shouldReturn(460);
+    }
+
 }
