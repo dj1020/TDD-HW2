@@ -17,21 +17,16 @@ class PotterShoppingCart
     }
 
     public function checkout() {
-        $restBooks = $this->books;
-        $total = 0;
-
-        while ( $restBooks->count() > 0 ) {
-            list($price, $restBooks) = $this->getBestDiscountPriceIn( $restBooks );
-            $total += $price;
-        }
-
-        return $total;
+        return $this->getBestDiscountPriceIn( $this->books );
     }
 
     private function getBestDiscountPriceIn( Collection $books ) {
+        if ($books->count() == 0) {
+            return 0;
+        }
+
         $discountBooks = new Collection();
         $restBooks = new Collection();
-
         while ( $book = $books->shift() ) {
             if ( $this->isUniqueBook( $book, $discountBooks ) ) {
                 $discountBooks->push( $book );
@@ -41,11 +36,9 @@ class PotterShoppingCart
         }
 
         $discountRate = $this->getDiscountRate( $discountBooks->count() );
+        $carrySum = (int)round( $discountBooks->sum( 'price' ) * $discountRate );
 
-        return [
-            (int)round( $discountBooks->sum( 'price' ) * $discountRate ),
-            $restBooks
-        ];
+        return $carrySum + $this->getBestDiscountPriceIn($restBooks);
     }
 
     private function getDiscountRate( $count ) {
@@ -60,11 +53,6 @@ class PotterShoppingCart
         return $discountRate[$count];
     }
 
-    /**
-     * @param $book
-     * @param $discountBooks
-     * @return bool
-     */
     private function isUniqueBook( $book, Collection $discountBooks ) {
         return ! $discountBooks->pluck( 'id' )->contains( $book->id );
     }
