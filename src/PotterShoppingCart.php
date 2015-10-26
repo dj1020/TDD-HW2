@@ -8,27 +8,41 @@ class PotterShoppingCart
 {
     private $books;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->books = new Collection();
     }
 
-    public function add(Book $books)
-    {
-        $this->books[] = $books;
+    public function add( Book $book ) {
+        $this->books->push( $book );
     }
 
-    public function checkout()
-    {
-        $uniqueBooks = $this->books->unique('id');
+    public function checkout() {
+        list($discount, $restBooks) = $this->getDiscount( $this->books );
 
-        $discountRate = $this->getDiscountRate( $uniqueBooks->count() );
-
-        return (int) round($uniqueBooks->sum('price') * $discountRate);
+        return $discount + $restBooks->sum( 'price' );
     }
 
-    private function getDiscountRate( $count )
-    {
+    private function getDiscount( $books ) {
+        $discountBooks = new Collection();
+        $restBooks = new Collection();
+
+        while ( $book = $books->shift() ) {
+            if ( $this->isUniqueBook( $book, $discountBooks ) ) {
+                $discountBooks->push( $book );
+            } else {
+                $restBooks->push( $book );
+            }
+        }
+
+        $discountRate = $this->getDiscountRate( $discountBooks->count() );
+
+        return [
+            (int)round( $discountBooks->sum( 'price' ) * $discountRate ),
+            $restBooks
+        ];
+    }
+
+    private function getDiscountRate( $count ) {
         $discountRate = [
             1 => 1,
             2 => 0.95,
@@ -38,5 +52,14 @@ class PotterShoppingCart
         ];
 
         return $discountRate[$count];
+    }
+
+    /**
+     * @param $book
+     * @param $discountBooks
+     * @return bool
+     */
+    private function isUniqueBook( $book, $discountBooks ) {
+        return ! $discountBooks->pluck( 'id' )->contains( $book->id );
     }
 }
