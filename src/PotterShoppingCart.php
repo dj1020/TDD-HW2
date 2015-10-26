@@ -21,14 +21,14 @@ class PotterShoppingCart
         $total = 0;
 
         while ( $restBooks->count() > 0 ) {
-            list($discount, $restBooks) = $this->getDiscount( $restBooks );
-            $total += $discount;
+            list($price, $restBooks) = $this->getBestDiscountPriceIn( $restBooks );
+            $total += $price;
         }
 
         return $total;
     }
 
-    private function getDiscount( Collection $books ) {
+    private function getBestDiscountPriceIn( Collection $books ) {
         $discountBooks = new Collection();
         $restBooks = new Collection();
 
